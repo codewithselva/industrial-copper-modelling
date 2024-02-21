@@ -2,7 +2,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-import sklearn
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
+from sklearn.metrics import mean_squared_error, accuracy_score
+import streamlit as st
 
 # Read the CSV file and load it into a Pandas DataFrame
 excel_file_path = 'copper_data_set.csv'
@@ -71,9 +75,6 @@ regression_target = cleaned_df['selling_price']
 classification_features = cleaned_df.drop(['selling_price','id','item_date','delivery date','material_ref', 'customer','item type','product_ref'], axis=1)
 classification_target = cleaned_df['status']
 
-
-from sklearn.model_selection import train_test_split
-
 # Train-test split
 regression_X_train, regression_X_test, regression_y_train, regression_y_test = train_test_split(
     regression_features, regression_target, test_size=0.2, random_state=42
@@ -83,17 +84,11 @@ classification_X_train, classification_X_test, classification_y_train, classific
     classification_features, classification_target, test_size=0.2, random_state=42
 )
 
-
-from sklearn.preprocessing import StandardScaler
-
 # Data normalization and feature scaling
 scaler = StandardScaler()
 regression_X_train_scaled = scaler.fit_transform(regression_X_train)
 regression_X_test_scaled = scaler.transform(regression_X_test)
 
-from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
-from sklearn.metrics import mean_squared_error, accuracy_score
-import streamlit as st
 # Regression model
 regression_model = RandomForestRegressor()
 regression_model.fit(regression_X_train_scaled, regression_y_train)
